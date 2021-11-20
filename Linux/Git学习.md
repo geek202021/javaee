@@ -30,11 +30,26 @@
 1. 显示所有帮助：`git help -a` ，显示add的详细信息：`git help add`（F向下翻页，B向上翻页）
 2. 设置用户名：$ git config --global user.name jun
 3. 查看自己的用户名或邮箱：$ `git config --global` user.name ，$ git config --global user.email
-4. 查看配置信息：`git config --list`
+4. 查看所有配置信息：`git config --list`
 5. 执行：`git config unset --global user.name`时出现错误信息error：key dose not contain a section：unset
    1. 查看出错的信息：git config --help，发现输入错了改正为：`git config --unset --global user.name`
 6. 让git输出的类容带颜色：`git config --global color.ui true`
 7. 在全局里的设置，都会放在当前用户的主目录里：查看主目录：`cat ~/.gitconfig`
+
+>覆盖邮箱和用户
+
+- $ git config --global user.name "yourName"
+- $ git config --global user.email "your@email.com"
+
+>替换
+
+- $  git config --global --replace-all user.name "yourName" 
+- $  git config --global --replace-all user.email "your@email.com"
+
+>删除：
+
+- $ git config --global --unset user.name "yourName"
+- $ git config --global --unset user.email "your@email.com"
 
 ## git-diff
 
@@ -67,7 +82,10 @@
 1. 查看远程服务器地址和仓库名称：git remote -v 
 2. 设置远程仓库地址(用于修改远程仓库地址)：git remote set-url origin git@ github.com:robbin/robbin_site.git
 
+##   验证SSH-key
 
+- `ssh -T git@gitee.com`
+- `ssh -T git@github.com`
 
 #  遇到的错误
 

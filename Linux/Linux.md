@@ -1115,4 +1115,107 @@ position.sh 第一个参数信息： 100 第二个参数信息： 200
 
 >shell设计者事先定义好的变量，可以直接在shell脚本中使用
 
-1. 
+1. `$$`  当前进程的进程号 PID
+1. `$!`  后台运行的最后一个进程的进程号 PID
+1. `$?`  最后一次执行的命令的返回状态。如果这个变量的值为0，证明上一个命令正确执行；如果这个变量的值为非0，则证明上一个命令执行不正确了。
+1. 案例：在一个shell脚本中简单使用一下预定义变量
+1. `/root/shcode/position.sh &`  其中 `&` 表示以后台方式运行
+
+```shell
+[root@192 shcode]# vim preVar.sh
+#!/bin/bash
+echo "当前执行的进程id=$$"
+#以后台的方式运行一个脚本，并获取他的进程号
+/root/shcode/position.sh &
+echo "最后一个后台方式运行的进程id=$!"
+echo "执行的结果是=$?"
+
+[root@192 shcode]# ls
+hello.sh  position.sh  preVar.sh  var.sh
+[root@192 shcode]# vim preVar.sh
+[root@192 shcode]# ./preVar.sh 
+当前执行的进程id=1226
+最后一个后台方式运行的进程id=1227
+执行的结果是=0
+[root@192 shcode]# ./preVar.sh:行4: /root/shcode/position.sh: 权限不够
+
+```
+
+###  运算符
+
+1. 案例1：计算(2+3)x4的值。
+2. 案例2：求出命令行的两个参数[整数]的和20 50
+
+```shell
+[root@192 shcode]# vim operator.sh
+[root@192 shcode]# chmod u+x operator.sh
+#!/bin/bash
+# 计算(2+3)x4的值
+#使用第一种运算符方式
+RES1=$(((2+3)*4))
+echo "res1=$RES1"
+#使用第二种运算符方式
+RES2=$[(2+3)*4]
+echo "res2=$RES2"
+#使用第三种方式
+TEMP=`expr 2+3`
+echo "错误的写法temp=$TEMP"
+TEMP2=`expr 2 + 3`
+echo "正确的写法temp2=$TEMP2"
+TEMP3=`expr $TEMP2 * 4`
+echo "错误的写法temp3=$TEMP3"
+TEMP4=`expr $TEMP2 \* 4`
+echo "正确的写法temp4=$TEMP4"
+# 求出命令行的两个参数[整数]的和20 50 
+SUM=$[($1+$2)]
+echo "sum=$SUM"
+
+[root@192 shcode]# ./operator.sh 20 50
+res1=20
+res2=20
+错误的写法temp=2+3
+正确的写法temp2=5
+expr: 语法错误
+错误的写法temp3=
+正确的写法temp4=20
+sum=70
+```
+
+###  条件判断
+
+- `[ condition ]`  注意condition前后要有空格：非空返回true，可使用`$?`验证
+- `[ condition ] && echo OK || echo notok`  条件满足执行后面的语句
+- `-lt`小于； `le`小于等于little equal；  `-eq`等于；  `-gt`大于；  `-ge`大于等于；  `-ne`不等于
+- 按照文件类型进行判断：
+  - `-f`文件存在并且是一个常规的文件
+  - `-e` 文件存在
+  - `-d` 文件存在并且是一个目录
+
+```shell
+[root@192 shcode]# vim ifdemo.sh
+#!/bin/bash
+#1.判断语句，使用=
+if [ "ok" = "ok" ]
+then
+        echo "equal"
+fi
+#2.判断23是否大于22
+if [ 23 -ge 22 ]
+then 
+        echo "大于"
+fi
+#3. /root/shcode/aaa.txt 目录中的文件是否存在
+# 判断语句使用-f
+if [ -f /root/shcode/aaa.txt ]
+then
+        echo "存在"
+fi
+
+[root@192 shcode]# vim ifdemo.sh
+[root@192 shcode]# chmod u+x ifdemo.sh 
+[root@192 shcode]# ./ifdemo.sh 
+equal
+大于
+[root@192 shcode]# 
+```
+
