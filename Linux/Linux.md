@@ -762,7 +762,7 @@ DNS1=192.168.200.2
 
 - 本地=》根=》顶级=》权限域名服务器
 
-![dns](D:\typoraDoc\4-JavaEE\\imgs\dns.png)
+![dns](D:\typoraDoc\4-JavaEE\\imgs\dns.png) 和下面这张图片路径的区别
 
 <img src="imgs\dns.png" align='left' />
 
@@ -805,7 +805,7 @@ DNS1=192.168.200.2
 8. TIME：CPU时间，即进程使用CPU的总时间
 9. COMMAND：启动进程所用的命令和参数，如果时间过长会被截断显示
 
-<img src="D:\typoraDoc\4-JavaEE\imgs\psaux.png" align="left"/>
+<img src="imgs\psaux.png" align="left"/>
 
 ##  以全格式显示当前所有进程，查看进程的父进程
 

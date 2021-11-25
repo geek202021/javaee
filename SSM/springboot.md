@@ -127,6 +127,8 @@ taskkill -f -pid 3756
 
 - `http://localhost:8080/ch01_ssm/save?name=xiaoming&birthday=2020/12/12&salary=23.34`
 
+2021年11月21日00:02:25
+
 #  现有SSM开发存在的问题
 
 1. 大量maven臃余配置
@@ -499,5 +501,109 @@ orders:
 alipay:
     key: xxx
     secrect: xxx
+
+# 配置jsp视图前缀和后缀
+spring:
+  mvc:
+    view:
+      prefix: /
+      suffix: .jsp
+```
+
+##  JSP模板集成
+
+- 引入jsp的集成jar包：jstl、jstl、1.2  / org.apache.tomcat.embed、tomcat-embed-jasper (让内嵌tomcat具有解析jsp功能)
+
+- 配置jsp视图前缀和后缀：
+- IDEA中springboot项目有一个小问题：找不到.jsp文件：
+  - 解决办法是：EditConfigurations-》WorkingDirectory-》$MODULE_DIR$
+  - 解决办法二：配置artifactID：pring-boot-maven-plugin，groupID：org.springframework.boot
+  - 通过插件：spring-boot：run启动
+- 修改jsp无需重启应用：作用：修改jsp页面无需重启springboot应用
+
+```yaml
+# 修改jsp无需重启应用
+server:
+    servlet:
+      jsp:
+        init-parameters:
+          development: true
+```
+
+```java
+@Controller
+public class JSPController {
+    @RequestMapping("jsp")
+    public String jsp() {
+        System.out.println("jsp ok");
+        return "index";
+    }
+}
+```
+
+##  整合mybatis思路分析
+
+- `17分26秒`
+- springboot 微框架 = spring 工厂 + springmvc控制器
+- 数据库访问框架：hibernate、jpa、mybatis
+- 
+
+##  整合mybatis编码实现
+
+###  环境搭建：
+
+1. 引入依赖：
+   - spring-boot-starter-web
+   - mysql相关（druid,1.2.4/mysql-connector-java 5.1.38）
+   - mybatis相关（mybatis-spring-boot-stater 2.1.4）(相当于整合了mybatis、mybatis-spring)
+   - 注意：springboot命名规范：ch04springboot-day1；com.package
+2. application.yml
+3. 在入口文件Ch04IntegrationApplicaiton.java处加@MapperScan(value="com.ju.dao")注解创建所有dao
+
+```yaml
+server:
+  port: 8989
+  servlet:
+    context-path: /springboot_integration  #指定应用名称
+
+# 1.整合mybatis相关配置
+# 数据源
+spring:
+    datasource:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.jdbc.Driver # mysql5.x版本驱动
+      url: jdbc:mysql://localhost:3306/ssm?useSSL=false&characterEncoding=UTF-8
+      username: root
+      password: hrj
+# 指定mapper配置文件的位置、相当于sqlSessionFactory
+mybatis:
+  mapper-locations: classpath:com/jun/mapper/*.xml
+  type-aliases-package: com.jun.entity # 指定实体类的包名，默认别名：类名，类名首字母小写
+```
+
+###  @MapperScan
+
+- 修饰范围：用在类上，作用：用来扫描dao接口所在的包，同时将所有dao接口在工厂中创建对象。
+
+```java
+@SpringBootApplication
+@MapperScan(value="com.jun.dao") //修饰范围：用在类上，作用：用来扫描dao接口所在的包，同时将所有dao接口在工厂中创建对象。
+public class Ch04IntegrationApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(Ch04IntegrationApplication.class, args);
+    }
+}
+```
+
+###  建表
+
+```sql
+CREATE TABLE `user`(		 
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `name` VARCHAR(40) COMMENT '姓名',
+  `birthday` TIMESTAMP COMMENT '生日',
+  `salary` DOUBLE(10,2) COMMENT '工资',
+  PRIMARY KEY (`id`) 
+);
 ```
 

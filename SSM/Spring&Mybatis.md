@@ -283,3 +283,16 @@ public class TestMybatisSpring {
 }
 ```
 
+#  SSM整合（半注解开发）
+
+1.`<context:component-scan base-package=""/>`
+
+##  service
+
+1. 原始对象 ===》 注入DAO
+2. 额外功能 ===》DataSourceTransactionManager--》dataSource
+3. 切入点 + 事务属性
+   1. @Transactional(propagation,readOnly……)
+4. 组装切面
+   1. <tx：annotation-driven
+
